@@ -2,66 +2,36 @@ const express = require("express");
 
 const app = express();
 
-//IMP
+// Handling multiple routes
 
-//regex
-// /a/ if 'a' in route or 'rat' it is responded
-// /.*fly$/  - if fly available route it will responded fly & butterfly
-
-//adding query param and reading
-
-// /user?userId=101
-// console.log(req.query)
-
-// 2 or more params
-// /user?userId=101&password=testing
-// receving same
-
-// Handling -  /user/101
+//handling [] , handling order of execution, handling by next(), handling 2 responses
 
 
 
+app.use("/user", [(req, res, next) => {
+  console.log("Response 1 !");
+  next();
 
-// Handling query params
+  // res.send("Response 1 from server");
 
-// for /user?userId=101
+},
+(req, res, next) => {
+  console.log("Response 2 !");
+  // res.send("Response 2 from server");
+  next()
+}],
+(req, res, next) => {
+  console.log("Response 3 !");
+  next();
 
-app.get("/user", (req, res) => {
-  console.log(req.query)
-  res.send({ firstName: "Sai", lastName: "Tharun" });
+  // res.send("Response 3 from server");
+
+},
+(req, res, next) => {
+  console.log("Response 4 !");
+  res.send("Response 4 from server");
+  // next()
 });
-
-// for /user?userId=101&password=testing
-
-app.get("/user", (req, res) => {
-  console.log(req.query)
-  res.send({ firstName: "Sai", lastName: "Tharun" });
-});
-
-// for /user/101
-
-
-// Sending - "/user/101" - Reading /user/:userId - console.log(req.params)
-
-
-app.get("/user/:userId", (req, res) => {
-  console.log(req.params)
-  res.send({ firstName: "Sai", lastName: "Tharun" });
-});
-
-
-// for /user/101/saitharun/pass
-
-// Sending - /user/101/saitharun/pass - Reading - "/user/:userId/:name/:password"  - console.log(req.params)
-
-
-app.get("/user/:userId/:name/:password", (req, res) => {
-  console.log(req.params)
-  res.send({ firstName: "Sai", lastName: "Tharun" });
-});
-
-
-
 
 
 
