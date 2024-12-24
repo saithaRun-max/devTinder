@@ -1,30 +1,36 @@
 const express = require("express");
+const connectDB = require("./config/database");
+const User = require("./models/user")
 
 const app = express();
 
-//good way
-app.use("/getUserData", (req, res) => {
-  try {
-    //if error to getting data from db
-    throw new Error("eeeee");
-  } catch (err) {
-    res.status(500).send("Some error");
-  }
-});
 
-//wild card error handling
+app.post("/signup", (req,res)=>{
+  const user = new User({
+    firstName : "Ram",
+    lastName : "yadhama",
+    emailId : "ram@gmail.com",
+    age : 26
+  });
 
-//keep it last, it matchs every rotue
+  user.save();
 
-app.use("/", (err, req, res, next) => {
-  // (2 - parameters - 1st is req, 2nd is res )
-  // (3 - parameters - 1-req, 2-res, 3-next )
-  // (4 - param - 1-error, 2-req, 3-res, 4-next)
-  if (err) {
-    res.status(500).send("Something went worng");
-  }
-});
+  res.send("Data updated sucessfully")
 
-app.listen(3000, () => {
-  console.log("server is running , 3000.. ");
-});
+})
+
+
+connectDB()
+  .then(() => {
+    console.log("Database connection established...");
+    app.listen(3000, () => {
+      console.log("server is running , 3000.. ");
+    });
+
+  })
+  .catch((err) => {
+    console.error("Database cannot be established");
+  });
+
+
+
