@@ -1,24 +1,20 @@
 const express = require("express");
 const connectDB = require("./config/database");
-const User = require("./models/user")
+const User = require("./models/user");
 
 const app = express();
+app.use(express.json());
 
+app.post("/signup", async (req, res) => {
+  const user = new User(req.body);
 
-app.post("/signup", (req,res)=>{
-  const user = new User({
-    firstName : "Ram",
-    lastName : "yadhama",
-    emailId : "ram@gmail.com",
-    age : 26
-  });
-
-  user.save();
-
-  res.send("Data updated sucessfully")
-
-})
-
+  try {
+    await user.save();
+    res.send("Data updated sucessfully");
+  } catch (err) {
+    res.send(400).send("Error saving the user :" + err.message);
+  }
+});
 
 connectDB()
   .then(() => {
@@ -26,11 +22,7 @@ connectDB()
     app.listen(3000, () => {
       console.log("server is running , 3000.. ");
     });
-
   })
   .catch((err) => {
     console.error("Database cannot be established");
   });
-
-
-
